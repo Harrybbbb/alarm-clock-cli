@@ -64,23 +64,23 @@ You'll get a live display that redraws every second:
 
 ## Keys
 
-| Key | Action |
-|---|---|
-| `A` | Add an alarm — prompts for a 24-hour `HH:MM` and an optional label. |
+| Key | Action                                                                                   |
+| --- | ---------------------------------------------------------------------------------------- |
+| `A` | Add an alarm — prompts for a 24-hour `HH:MM` and an optional label.                      |
 | `T` | Toggle an alarm on or off. A disabled alarm keeps its place in the list but never rings. |
-| `S` | Snooze the next alarm by 5 minutes. |
-| `D` | Delete an alarm by id. |
-| `C` | Clear every alarm (asks first). |
-| `Q` | Quit. Ctrl+C also works. |
+| `S` | Snooze the next alarm by 5 minutes.                                                      |
+| `D` | Delete an alarm by id.                                                                   |
+| `C` | Clear every alarm (asks first).                                                          |
+| `Q` | Quit. Ctrl+C also works.                                                                 |
 
 When an alarm comes due the display turns red, a `🔔 ALARM RINGING`
 banner appears, and the alarm sound starts. The keys narrow to the only
 two that make sense:
 
-| Key | Action |
-|---|---|
+| Key | Action                                                                 |
+| --- | ---------------------------------------------------------------------- |
 | `S` | Snooze 5 minutes. The alarm returns to the list marked `(snoozed ×1)`. |
-| `D` | Dismiss — deletes the alarm. `Enter` and `Space` do the same. |
+| `D` | Dismiss — deletes the alarm. `Enter` and `Space` do the same.          |
 
 A ringing alarm keeps ringing until you answer it; it is never
 dismissed for you. Keys that would reconfigure an alarm are ignored
@@ -247,43 +247,3 @@ tests/
 - **The terminal is checked, not assumed.** `main.py` falls back to the
   classic prompt when stdin isn't a tty, so piping into the app gives
   readable output instead of escape codes.
-
-## Scope & assumptions
-
-Explicitly **out of scope** for this exercise (noted here rather than
-silently omitted):
-
-- Persistence across runs (no database was a hard constraint; a
-  flat-file workaround was considered and rejected as scope creep for
-  a 30-minute build)
-- Recurring alarms (daily / weekdays)
-- Timezone handling (uses system local time)
-- Sound files / external notification services
-- Adding alarms concurrently while `start` is waiting, in classic mode
-  (by design — avoids background-thread complexity; add all alarms,
-  then `start`). The live display has no such limitation: it polls on a
-  timer, so alarms can be added, toggled and snoozed at any time,
-  including while another is ringing.
-
-**Assumptions:**
-- Single user, single timezone (system local time).
-- Adding an alarm for the exact current minute means tomorrow, not
-  "immediately" — otherwise `add` would fire before the user could
-  finish setting up.
-- `start` waits for *all* currently-set alarms in chronological order,
-  not just the next one, returning to the prompt once the list is
-  empty or the user interrupts.
-- An alarm whose time passes while the user is still at the prompt is
-  **overdue**, not rescheduled. `list` marks it as such and `start`
-  fires it immediately. A late alarm is more useful than a silent one.
-
-## Possible future improvements
-
-(Not implemented — listed here rather than built, per the exercise's
-guidance not to add unrequested features.)
-
-- Optional JSON-file persistence between runs
-- Recurring/daily alarms
-- Editing an existing alarm's time/label instead of remove-then-add
-- A configurable snooze interval (currently fixed at 5 minutes)
-# alarm-clock-cli
