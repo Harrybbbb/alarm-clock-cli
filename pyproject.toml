@@ -1,0 +1,27 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "alarm-clock-cli"
+version = "0.1.0"
+description = "An interactive terminal alarm clock with a live Rich UI."
+requires-python = ">=3.9"
+dependencies = ["rich>=13"]
+
+[project.optional-dependencies]
+dev = ["pytest>=7", "mypy>=1.0"]
+
+[project.scripts]
+alarm-clock = "alarm_clock.main:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]
+
+[tool.mypy]
+files = ["src/alarm_clock"]
+strict = true
